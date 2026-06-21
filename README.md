@@ -72,11 +72,6 @@ clima-energia-espana/
 - **ESIOS / Red Eléctrica de España** (https://www.esios.ree.es): API pública
   de demanda eléctrica, requiere token gratuito (registro inmediato).
 
-## Estado del proyecto
-
-🚧 En construcción — proyecto 1 de un roadmap de portfolio para perfil
-Data/IA junior.
-
 ## Próximos pasos
 
 - [ ] Extracción de datos de Open-Meteo
