@@ -34,13 +34,34 @@ def obtener_temperatura(ciudad: str, fecha_inicio: str, fecha_fin: str) -> pd.Da
     Devuelve:
         DataFrame con columnas: fecha, ciudad, temp_media, temp_max, temp_min
     """
-    # TODO 1: obtener lat/lon de CIUDADES[ciudad]
-    # TODO 2: construir la URL de la API histórica de Open-Meteo
-    #         (endpoint: https://archive-api.open-meteo.com/v1/archive)
-    # TODO 3: hacer la petición con requests.get()
-    # TODO 4: convertir la respuesta JSON en un DataFrame de pandas
-    raise NotImplementedError("Implementar obtener_temperatura")
+    lat, lon = CIUDADES[ciudad];
+    
+    url = "https://archive-api.open-meteo.com/v1/archive"
 
+    parametros = {
+    "latitude": lat,
+    "longitude": lon,
+    "start_date": fecha_inicio,
+    "end_date": fecha_fin,
+    "daily": "temperature_2m_mean,temperature_2m_max,temperature_2m_min",
+    "timezone": "Europe/Madrid",
+}
+
+    respuesta = requests.get(url, params=parametros)
+    respuesta.raise_for_status()
+
+    datos = respuesta.json()
+    df = pd.DataFrame(datos["daily"])
+
+    df = df.rename(columns={
+    "time": "fecha",
+    "temperature_2m_mean": "temp_media",
+    "temperature_2m_max": "temp_max",
+    "temperature_2m_min": "temp_min",
+})
+    df["ciudad"] = ciudad
+
+    return df
 
 def obtener_demanda_electrica(fecha_inicio: str, fecha_fin: str) -> pd.DataFrame:
     """
