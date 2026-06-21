@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: clima_energia_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: clima_user
+      POSTGRES_PASSWORD: clima_pass
+      POSTGRES_DB: clima_energia
+    ports:
+      - "5432:5432"
+    volumes:
+      - clima_energia_data:/var/lib/postgresql/data
+
+volumes:
+  clima_energia_data:
