@@ -5,15 +5,17 @@ import pandas as pd
 
 
 def limpiar_temperatura(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Limpia el DataFrame de temperatura: tipos de datos correctos,
-    valores nulos, posibles duplicados por fecha/ciudad.
-    """
-    # TODO: convertir columna fecha a datetime
-    # TODO: eliminar duplicados (mismo día y ciudad)
-    # TODO: decidir qué hacer con valores nulos (imputar o descartar)
-    raise NotImplementedError("Implementar limpiar_temperatura")
 
+    # Convertimos la columna fecha a un tipo de fecha real
+    df["fecha"] = pd.to_datetime(df["fecha"])
+
+    # Eliminamos duplicados
+    df = df.drop_duplicates(subset=["fecha", "ciudad"])
+
+    # En caso de valores nulos, calculamos un valor intermedio razonable
+    df[["temp_media", "temp_max", "temp_min"]] = df[["temp_media", "temp_max", "temp_min"]].interpolate()
+
+    return df
 
 def limpiar_demanda(df: pd.DataFrame) -> pd.DataFrame:
     """
