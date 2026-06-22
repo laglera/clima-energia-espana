@@ -65,16 +65,27 @@ def obtener_demanda_electrica(fecha_inicio: str, fecha_fin: str) -> pd.DataFrame
 
     url = "https://api.esios.ree.es/indicators/1293"
 
-    parametros = {
-        "start_date": fecha_inicio,
-        "end_date": fecha_fin,
-    }
+    rangos = pd.date_range(start=fecha_inicio, end=fecha_fin, freq="MS")
 
-    respuesta = requests.get(url, headers=headers, params=parametros)
-    respuesta.raise_for_status()
+    dfs = []
+    for inicio_mes in rangos:
+        fin_mes = inicio_mes + pd.offsets.MonthEnd(0)
+        # No nos pasamos del fecha_fin real que pidió el usuario.
+        fin_mes = min(fin_mes, pd.to_datetime(fecha_fin))
 
-    datos = respuesta.json()
-    df = pd.DataFrame(datos["indicator"]["values"])
+        parametros = {
+            "start_date": inicio_mes.strftime("%Y-%m-%d"),
+            "end_date": fin_mes.strftime("%Y-%m-%d"),
+        }
+
+        respuesta = requests.get(url, headers=headers, params=parametros)
+        respuesta.raise_for_status()
+
+        datos = respuesta.json()
+        df_mes = pd.DataFrame(datos["indicator"]["values"])
+        dfs.append(df_mes)
+
+    df = pd.concat(dfs, ignore_index=True)
 
     df = df.rename(columns={
         "datetime": "fecha",
@@ -83,7 +94,6 @@ def obtener_demanda_electrica(fecha_inicio: str, fecha_fin: str) -> pd.DataFrame
     df = df[["fecha", "demanda_mwh"]]
 
     return df
-
 if __name__ == "__main__":
     # Prueba rápida manual mientras desarrollamos.
     df_temp = obtener_temperatura("Madrid", "2024-01-01", "2024-01-31")

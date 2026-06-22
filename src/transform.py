@@ -20,7 +20,7 @@ def limpiar_temperatura(df: pd.DataFrame) -> pd.DataFrame:
 def limpiar_demanda(df: pd.DataFrame) -> pd.DataFrame:
 
     # Convertir la columna fecha a un tipo de fecha real
-    df["fecha"] = pd.to_datetime(df["fecha"])
+    df["fecha"] = pd.to_datetime(df["fecha"], utc=True)
     
     # Extraemos la parte del dia de la fecha
     df["fecha"] = df["fecha"].dt.date
