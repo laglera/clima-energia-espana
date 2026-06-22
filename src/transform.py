@@ -31,12 +31,12 @@ def limpiar_demanda(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def cruzar_datasets(df_temp: pd.DataFrame, df_demanda: pd.DataFrame) -> pd.DataFrame:
-    """
-    Cruza temperatura y demanda por fecha.
+    
+    # Igualar los tipos de la columna fecha
+    df_demanda["fecha"] = pd.to_datetime(df_demanda["fecha"])
 
-    Nota: la demanda eléctrica de ESIOS es nacional, no por ciudad, así que
-    el cruce será por fecha únicamente. Si quieres comparar varias ciudades,
-    tendrás varias filas de temperatura por cada fila de demanda.
-    """
-    # TODO: usar pd.merge() con la columna fecha como clave
-    raise NotImplementedError("Implementar cruzar_datasets")
+    # Cruzar los dos DataFrames
+    df_cruzado = pd.merge(df_temp, df_demanda, on="fecha", how="inner")
+
+    return df_cruzado
+
