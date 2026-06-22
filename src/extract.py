@@ -52,22 +52,23 @@ def obtener_temperatura(ciudad: str, fecha_inicio: str, fecha_fin: str) -> pd.Da
     # Devolvemos el DataFrame ya limpio
     return df
 
+# La funcion recibe dos parametros, fecha de inicio y fecha de fin
 def obtener_demanda_electrica(fecha_inicio: str, fecha_fin: str) -> pd.DataFrame:
-    """
-    Descarga la demanda eléctrica diaria de España usando la API de ESIOS.
-    Requiere la variable de entorno ESIOS_TOKEN.
 
-    Devuelve:
-        DataFrame con columnas: fecha, demanda_mwh
-    """
     token = os.getenv("ESIOS_TOKEN")
-    # TODO 1: construir los headers de autenticación con el token
-    #         (ESIOS usa el header "x-api-key")
-    # TODO 2: elegir el indicador correcto en https://api.esios.ree.es/indicators
-    #         (busca el indicador de "demanda real" o "demanda programada")
-    # TODO 3: hacer la petición GET con el rango de fechas
-    # TODO 4: convertir la respuesta JSON en un DataFrame de pandas
-    raise NotImplementedError("Implementar obtener_demanda_electrica")
+
+    headers = {
+        "Accept": "application/json; application/vnd.esios-api-v1+json",
+        "Content-Type": "application/json",
+        "x-api-key": token,
+    }
+
+    url = "https://api.esios.ree.es/indicators/1293"
+
+    parametros = {
+        "start_date": fecha_inicio,
+        "end_date": fecha_fin,
+    }
 
 
 if __name__ == "__main__":
