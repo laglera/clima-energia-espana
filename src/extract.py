@@ -70,6 +70,19 @@ def obtener_demanda_electrica(fecha_inicio: str, fecha_fin: str) -> pd.DataFrame
         "end_date": fecha_fin,
     }
 
+    respuesta = requests.get(url, headers=headers, params=parametros)
+    respuesta.raise_for_status()
+
+    datos = respuesta.json()
+    df = pd.DataFrame(datos["indicator"]["values"])
+
+    df = df.rename(columns={
+        "datetime": "fecha",
+        "value": "demanda_mwh",
+    })
+    df = df[["fecha", "demanda_mwh"]]
+
+    return df
 
 if __name__ == "__main__":
     # Prueba rápida manual mientras desarrollamos.
