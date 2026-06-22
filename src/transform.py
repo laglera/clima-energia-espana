@@ -18,13 +18,17 @@ def limpiar_temperatura(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def limpiar_demanda(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Limpia el DataFrame de demanda eléctrica.
-    """
-    # TODO: convertir columna fecha a datetime
-    # TODO: revisar outliers (picos imposibles de demanda)
-    raise NotImplementedError("Implementar limpiar_demanda")
 
+    # Convertir la columna fecha a un tipo de fecha real
+    df["fecha"] = pd.to_datetime(df["fecha"])
+    
+    # Extraemos la parte del dia de la fecha
+    df["fecha"] = df["fecha"].dt.date
+
+    # Agrupamos por ese dia y calculamos la media de demanda
+    df = df.groupby("fecha", as_index=False)["demanda_mwh"].mean()
+
+    return df
 
 def cruzar_datasets(df_temp: pd.DataFrame, df_demanda: pd.DataFrame) -> pd.DataFrame:
     """
