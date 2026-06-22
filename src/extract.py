@@ -1,11 +1,3 @@
-"""
-Extracción de datos crudos desde las APIs externas:
-- Open-Meteo: temperatura diaria por ciudad.
-- ESIOS (REE): demanda eléctrica diaria.
-
-Cada función debe devolver un DataFrame de pandas, sin transformar todavía
-(eso es responsabilidad de transform.py).
-"""
 import os
 import requests
 import pandas as pd
@@ -14,30 +6,22 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Coordenadas de las ciudades que vamos a analizar.
-# Puedes añadir más ciudades aquí en el formato (nombre, latitud, longitud).
 CIUDADES = {
     "Madrid": (40.4168, -3.7038),
     "Sevilla": (37.3891, -5.9845),
     "Barcelona": (41.3874, 2.1686),
 }
 
-
+# La funcion recibe tres parametros, ciudad, fecha de inicio y fecha de fin
 def obtener_temperatura(ciudad: str, fecha_inicio: str, fecha_fin: str) -> pd.DataFrame:
-    """
-    Descarga la temperatura diaria de una ciudad entre dos fechas usando
-    la API de Open-Meteo (https://open-meteo.com/en/docs/historical-weather-api).
 
-    Parámetros:
-        ciudad: debe existir como clave en el diccionario CIUDADES.
-        fecha_inicio / fecha_fin: formato "YYYY-MM-DD".
-
-    Devuelve:
-        DataFrame con columnas: fecha, ciudad, temp_media, temp_max, temp_min
-    """
+    # Buscamos en el diccionario CIUDADES la tupla de coordenadas correspondiente al nombre de la ciudad
     lat, lon = CIUDADES[ciudad];
     
+    # Guardamos en una variable (url) la direccion de la API
     url = "https://archive-api.open-meteo.com/v1/archive"
 
+    # Creamos un diccionario con todos los paramentros que la API va a recibir
     parametros = {
     "latitude": lat,
     "longitude": lon,
@@ -46,21 +30,26 @@ def obtener_temperatura(ciudad: str, fecha_inicio: str, fecha_fin: str) -> pd.Da
     "daily": "temperature_2m_mean,temperature_2m_max,temperature_2m_min",
     "timezone": "Europe/Madrid",
 }
-
+    # requests crea la URL uniendo url con parametros, y guarda el resultados de la peticion en (respuesta)
     respuesta = requests.get(url, params=parametros)
     respuesta.raise_for_status()
 
+    # Convertimos el texto de la respuesta (formato JSON) en estructura Python (Diccionario)
     datos = respuesta.json()
+    # Del diccionario datos solo nos interesa la parte "daily"
     df = pd.DataFrame(datos["daily"])
 
+    # Renombramos las columnas que vienen con los nombres tecnicos de la API
     df = df.rename(columns={
     "time": "fecha",
     "temperature_2m_mean": "temp_media",
     "temperature_2m_max": "temp_max",
     "temperature_2m_min": "temp_min",
 })
+    # Añadimos una columna ciudad
     df["ciudad"] = ciudad
 
+    # Devolvemos el DataFrame ya limpio
     return df
 
 def obtener_demanda_electrica(fecha_inicio: str, fecha_fin: str) -> pd.DataFrame:
