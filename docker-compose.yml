@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: clima_pass
       POSTGRES_DB: clima_energia
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - clima_energia_data:/var/lib/postgresql/data
 

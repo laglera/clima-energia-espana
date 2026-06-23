@@ -1,6 +1,3 @@
-"""
-Carga del DataFrame final (limpio y cruzado) en PostgreSQL.
-"""
 import os
 import pandas as pd
 from sqlalchemy import create_engine
@@ -16,10 +13,7 @@ def obtener_engine():
 
 
 def cargar_datos(df: pd.DataFrame, nombre_tabla: str = "clima_demanda") -> None:
-    """
-    Carga el DataFrame en la tabla indicada. Si la tabla ya existe,
-    la reemplaza (válido para este proyecto, no para producción real).
-    """
+
     engine = obtener_engine()
-    # TODO: usar df.to_sql(nombre_tabla, engine, if_exists="replace", index=False)
-    raise NotImplementedError("Implementar cargar_datos")
+    df.to_sql(nombre_tabla, engine, if_exists="replace", index=False)
+    print(f"Datos cargados en la tabla '{nombre_tabla}' ({len(df)} filas).")

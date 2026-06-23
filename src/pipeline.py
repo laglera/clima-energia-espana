@@ -29,8 +29,7 @@ def ejecutar_pipeline():
     df_final = cruzar_datasets(df_temp, df_demanda)
 
     print("5/5 Cargando en PostgreSQL...")
-    print(df_final.head())
-    print(f"Total de filas: {len(df_final)}")
+    cargar_datos(df_final)
 
     print("Pipeline completado.")
 
