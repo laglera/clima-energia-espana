@@ -1,5 +1,7 @@
 # Clima y energía en España
 
+![Dashboard del proyecto](docs/dashboard.png)
+
 Pipeline de datos que cruza temperatura diaria (Open-Meteo) con demanda
 eléctrica (Red Eléctrica de España / ESIOS) para varias ciudades españolas,
 y un dashboard interactivo para explorar la relación entre ambas variables.
@@ -72,10 +74,8 @@ clima-energia-espana/
 - **ESIOS / Red Eléctrica de España** (https://www.esios.ree.es): API pública
   de demanda eléctrica, requiere token gratuito (registro inmediato).
 
-## Próximos pasos
+## Estado del proyecto
 
-- [ ] Extracción de datos de Open-Meteo
-- [ ] Extracción de datos de ESIOS
-- [ ] Limpieza y cruce de ambos datasets
-- [ ] Carga en PostgreSQL
-- [ ] Dashboard en Streamlit
+✅ Completo — pipeline funcionando de extremo a extremo: extracción de
+dos APIs reales, limpieza, cruce de datasets con distinta granularidad,
+carga en PostgreSQL, y dashboard interactivo.
